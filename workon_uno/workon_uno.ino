@@ -1,19 +1,30 @@
 #include <SoftwareSerial.h>
-
+#define ch4_pin A0 
 float rx_msg[5];//idx 0:avg_co2 , 1:avg_voc , 2:pm2_5 , 3:pm10
 bool receiving_data = false;
 int sizeOfarray;
 SoftwareSerial mega(2,3);
 void setup() {
+  pinMode(ch4_pin,INPUT);
   Serial.begin(9600);
   mega.begin(9600);
 
 }
 
 void loop() {
+  float avg_ch4 = 0;
+  for(int count_round=0;count_round<10;count_round++){ 
+    float raw_data_ch4 = analogRead(ch4_pin);
+    avg_ch4 += raw_data_ch4;
+    delay(500);
+    if(count_round == 9){
+      avg_ch4 = avg_ch4/10;
+      Serial.println(avg_ch4);
+      }
+  }
   ///add code comand to mega for sampling /// 
   receiving_data = true;
-
+  
   
   while(receiving_data == true){
     while(mega.available()>0){
