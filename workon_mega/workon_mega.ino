@@ -7,6 +7,9 @@ unsigned int pm10 = 0;
 
 int countTofullArray = 0;
 String resultToUno[arraySize];
+
+int co2Offset = 100; // Offset value (adjust as needed)
+int co2Span = 200;   // Span value (adjust as needed)
   
 void setup() {
   pinMode(carbon_pin,INPUT);
@@ -14,6 +17,8 @@ void setup() {
   Serial.begin(9600);
   Serial1.begin(9600);//uno rx,tx on pin 19,18
   Serial2.begin(9600);//pm sensor rx,tx on pin 17,16
+
+  calibrateMG811();
 
 }
 
@@ -27,16 +32,12 @@ void loop() {
 
   countTofullArray = 0;
   
-  for(int count_round=0;count_round<10;count_round++){ 
-    float raw_data_carbon = analogRead(carbon_pin);
-    avg_co2 += raw_data_carbon;
-    delay(500);
-    if(count_round == 9){
-      avg_co2 = avg_co2/10;
-      resultToUno[countTofullArray]=avg_co2;
-      countTofullArray++;
-      }
-  }
+  int co2Value = analogRead(carbon_pin);
+  avg_co2 = map(co2Value, 0, 1023, co2Offset, co2Span);
+  resultToUno[countTofullArray]=avg_co2+400;//add distace of real value
+  countTofullArray++;
+
+  
   for(int count_round2=0;count_round2<10;count_round2++){
     float raw_data_voc = analogRead(voc_pin);
     avg_voc += raw_data_voc;
@@ -98,7 +99,7 @@ void loop() {
   countTofullArray++;
 
   
-  Serial.println(countTofullArray);
+  Serial.println(countTofullArray);//set format to send data
   String combinedResult = "";
   if(countTofullArray == arraySize){
     for (int i = 0; i < arraySize; i++) {
@@ -123,3 +124,41 @@ void loop() {
 //  Serial1.print(avg_voc);
   
 }
+
+
+
+void calibrateMG811() {
+  // Calibration routine
+  // Make sure the sensor is in a clean air environment during calibration
+
+  int sum = 0;
+  int numSamples = 100;
+
+  for (int i = 0; i < numSamples; i++) {
+    sum += analogRead(carbon_pin);
+    delay(20);
+  }
+
+  co2Offset = sum / numSamples;
+  co2Span = co2Offset + 400;  // Adjust span value as needed
+}
+
+
+
+
+
+
+
+
+
+
+//  for(int count_round=0;count_round<10;count_round++){ 
+//    float raw_data_carbon = analogRead(carbon_pin);
+//    avg_co2 += raw_data_carbon;
+//    delay(500);
+//    if(count_round == 9){
+//      avg_co2 = avg_co2/10;
+//      resultToUno[countTofullArray]=avg_co2;
+//      countTofullArray++;
+//      }
+//  }
