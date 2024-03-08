@@ -17,11 +17,11 @@ unsigned long startTime_uno = 0;
 unsigned long timeoutDuration_uno = 15000; // 5000 milliseconds = 5 seconds
 
 unsigned long startTime_a9g = 0;
-unsigned long timeoutDuration_a9g = 5000; // 5000 milliseconds = 5 seconds
+unsigned long timeoutDuration_a9g = 10000; // 5000 milliseconds = 5 seconds
 
 float rx_msg[5];//idx 0:avg_co2 , 1:avg_voc , 2:pm2_5 , 3:pm10
 bool receiving_data = false;
-bool system_run = false;
+bool system_run = true;
 
 //int countTofullArray = 0;
 //String resultToUno[arraySize];
@@ -37,11 +37,13 @@ String rx_msg_a9g = "";
 
 
 void setup() {
+  pinMode(sig_to_runUno,OUTPUT);
+  digitalWrite(sig_to_runUno,HIGH);
   pinMode(carbon_pin,INPUT);
   pinMode(voc_pin,INPUT);
   pinMode(active_button,INPUT);
-  pinMode(sig_to_runUno,OUTPUT);
-  digitalWrite(sig_to_runUno,HIGH);
+  
+  
   Serial.begin(115200);
   Serial1.begin(115200);//uno rx,tx on pin 19,18
   Serial2.begin(9600);//pm sensor rx,tx on pin 17,16
@@ -50,6 +52,7 @@ void setup() {
   calibrateMG811();
   Serial.println("Wait For Response a9g Module");
   delay(10000);
+  check_network_a9g();
   Init_a9g();
   
   Serial1.flush();
@@ -65,24 +68,26 @@ void setup() {
 
 void loop() {
 
-  int inp = digitalRead(active_button);
-  if(inp == HIGH){
-    Serial.println("system is running");
-    Serial.println(limitOf_sentDataTo_cloud);
-    system_run = true;
-//    limitOf_sentDataTo_cloud = 2;
-  }
+//  int inp = digitalRead(active_button);
+//  if(inp == HIGH){
+//    Serial.println("system is running");
+//    Serial.println(limitOf_sentDataTo_cloud);
+//    system_run = true;
+//  }
 
 
   if(limitOf_sentDataTo_cloud >= 4){//check limit of data
     Serial.println("Restart a9g board for Stability");
-    digitalWrite(resetA9g_pin,LOW);//}
-    delay(500);                     //}  reset a9g module board by hardware
-    digitalWrite(resetA9g_pin,HIGH);//}
+//    digitalWrite(resetA9g_pin,LOW);//}
+//    delay(500);                     //}  reset a9g module board by hardware
+//    digitalWrite(resetA9g_pin,HIGH);//}
 //    socket_a9g = true;
-    delay(1000);
-    UpdateSerial_a9g();
+    Serial3.println("AT+RST=1\r");
+    delay(4000);
+    UpdateSerial_http();
+//    UpdateSerial_a9g();
     delay(10000);
+    check_network_a9g();
     Init_a9g();
     limitOf_sentDataTo_cloud = 0;
   }
@@ -205,7 +210,7 @@ void loop() {
       Serial.println(tx_msg_a9g);
       delay(10000);
 //      socket_a9g = true;
-      UpdateSerial_a9g();
+      UpdateSerial_http();
 //      system_run = false;
       limitOf_sentDataTo_cloud += 1;
       }
@@ -215,10 +220,10 @@ void loop() {
       digitalWrite(led_status2,LOW);
       delay(60000);
       
-
+    system_run = true;
   
   }
-//  system_run = false;
+  
 }
 
 
@@ -298,26 +303,101 @@ void Init_a9g(){
   UpdateSerial_a9g();
 }
 
+//void UpdateSerial_a9g()
+//{
+////  startTime_a9g = millis();
+////  while(millis() - startTime_a9g < timeoutDuration_a9g){
+//  //while(socket_a9g == true){
+//   while (Serial3.available()>0){  
+//    char val = Serial3.read();
+////    rx_msg_a9g += val;
+//    if(val == '\n'){
+//      Serial.println(rx_msg_a9g);
+////      Serial.flush();
+//      rx_msg_a9g = "";
+////      socket_a9g = false;
+////      break;
+//    }
+//    else{
+//      rx_msg_a9g += val;
+//      
+//    }
+//    }
+////   while (Serial.available())   Serial3.write(Serial.read());
+//  //}
+//}
+
 void UpdateSerial_a9g()
 {
-//  startTime_a9g = millis();
-//  while(millis() - startTime_a9g < timeoutDuration_a9g){
-  //while(socket_a9g == true){
-   while (Serial3.available()>0){  
-    char val = Serial3.read();
-//    rx_msg_a9g += val;
-    if(val == '\n'){
-      Serial.println(rx_msg_a9g);
-//      Serial.flush();
-      rx_msg_a9g = "";
+  while(Serial3.available()!=0)
+  Serial.write(Serial3.read());
+//  delay(5000); 
+  
+}
+
+void check_network_a9g(){
+  bool connect_to_network = false;
+  String receive_message = "";
+  
+  while(connect_to_network == false){
+    Serial3.println("AT+CREG?\r");
+    delay(1000);
+    while(Serial3.available()>0){
+      char val = Serial3.read();
+  
+      if(val == '\n'){
+        Serial.println(receive_message);
+       if (receive_message.indexOf("+CREG: 1,1") == false) {
+          connect_to_network = true;
+          break;
+        }
+        receive_message = "";
+      }
+      else{
+        receive_message += val;
+      }
+    }
+  }
+  
+}
+
+
+//void UpdateSerial_http()
+//{
+//  bool socket_a9g = true;
+////  startTime_a9g = millis();
+////  while(millis() - startTime_a9g < timeoutDuration_a9g){
+//  while(socket_a9g == true){
+//   while (Serial3.available()>0){  
+//    char val = Serial3.read();
+////    rx_msg_a9g += val;
+//    if(val == '\n'){
+//      Serial.println(rx_msg_a9g);
+////      Serial.flush();
+//      rx_msg_a9g = "";
 //      socket_a9g = false;
 //      break;
-    }
-    else{
-      rx_msg_a9g += val;
-      
-    }
-    }
-//   while (Serial.available())   Serial3.write(Serial.read());
-  //}
+//    }
+//    else{
+//      rx_msg_a9g += val;
+//      
+//    }
+//    }
+////   while (Serial.available())   Serial3.write(Serial.read());
+//  //}
+//}
+//
+//}
+
+void UpdateSerial_http()
+{
+//  bool socket_a9g = true;
+  startTime_a9g = millis();
+  while(millis() - startTime_a9g < timeoutDuration_a9g){
+//  while(socket_a9g == true){
+   while(Serial3.available()!=0){
+  Serial.write(Serial3.read());}
+//    socket_a9g = false;
+  }
+ 
 }

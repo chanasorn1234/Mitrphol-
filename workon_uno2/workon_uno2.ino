@@ -15,6 +15,7 @@ DFRobot_GAS_I2C gas(&Wire ,I2C_ADDRESS);
 //float tx_msg[5];//idx 0:avg_co2 , 1:avg_voc , 2:pm2_5 , 3:pm10
 bool receiving_data = false;
 bool system_run = false;
+
 int sizeOfarray;
 unsigned int pm2_5 = 0;
 unsigned int pm10 = 0;
@@ -133,7 +134,7 @@ void loop() {
       resultToMega[countTofullArray]=gas.readGasConcentrationPPM();
       countTofullArray++;
     
-    
+//          mega.flush();
           Serial.println(countTofullArray);//set format to send data
           String combinedResult = "";
           if(countTofullArray == arraySize){
