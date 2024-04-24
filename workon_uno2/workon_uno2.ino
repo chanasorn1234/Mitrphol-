@@ -7,11 +7,13 @@
 DFRobot_GAS_I2C gas(&Wire ,I2C_ADDRESS);
 
 
-
+///////////// pin ที่เอาไว้ต่อกับบอร์ด///////
 #define ch4_pin A0 
-#define arraySize 5
 #define mq_135_pin A1
 #define sig_to_run 7
+//////////////////////////////////////////
+
+#define arraySize 5
 //float tx_msg[5];//idx 0:avg_co2 , 1:avg_voc , 2:pm2_5 , 3:pm10
 bool receiving_data = false;
 bool system_run = false;
