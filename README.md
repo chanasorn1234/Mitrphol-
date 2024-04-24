@@ -19,6 +19,7 @@ workon_uno2.ino ใช้กับ Arduino uno AT328p
 ไฟแสดงสถานะที่ 2(led_status2) ต่อเข้ากับขา 3 บนบอร์ด Arduino mega 2560
 
 พอร์ต UART(Serial RX1,TX1) ที่ 1 บนบอร์ด Arduino mega 2560 เชื่อมต่อ ขา RX,TX จากบอร์ด Arduino uno AT328p เพื่อส่งข้อมูลหากัน (https://docs.arduino.cc/resources/pinouts/A000067-full-pinout.pdf)
+
 พอร์ต UART(Serial RX3,TX3) ที่ 3 บนบอร์ด Arduino mega 2560 เชื่อมต่อ ขา RX,TX จากบอร์ด A9G module เพื่อส่งข้อมูลหากัน (https://docs.arduino.cc/resources/pinouts/A000067-full-pinout.pdf)(https://ai-thinker-open.github.io/GPRS_C_SDK_DOC/en/hardware/pudding-dev-board.html)
 
 ส่วน พอร์ต UART(Serial RX2,TX2) ที่ 2 ล่าสุดไม่ใช้แล้วสามารถลบโค้ดได้
@@ -32,6 +33,7 @@ workon_uno2.ino ใช้กับ Arduino uno AT328p
 โมดูลวัด CO ขา data เป็น I2C ให้ต่อเข้าพอร์ต I2C(SDA,SCL) ของบอร์ด Arduino uno AT328p (https://www.arnabkumardas.com/arduino-tutorial/pin-configuration-and-io-multiplexing/)
 
 ที่ SoftwareSerial mega(2,3); จาก RX,TX จากบอร์ด Arduino mega 2560 ให้ต่อเข้าขา 2 และ ขา 3 บนบอร์ด Arduino uno AT328p ให้ดูควบคู่กับบรรทัดที่ 21 ของเอกสารนี้
+
 ที่ SoftwareSerial ss(4,5); จาก RX,TX จากบอร์ด GPS module ให้ต่อเข้าขา 4 และ ขา 5 บนบอร์ด Arduino uno AT328p (เป็นโมดูลเรียกดูพิกัดละติจูดกับลองจิจูดของอุปกรณ์ ยังไม่ดีเท่าไหร่เพราะรับสัญญาณดาวเทียมไม่ค่อยได้)
 
 ไฟเลี้ยง 5 V ที่จะต่อเข้าโมดูลใช้จากบอร์ดไฟนก็ได้เพราะทั้งบอร์ด GND ถึงกันแล้ว
