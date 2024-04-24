@@ -25,6 +25,8 @@ workon_uno2.ino ใช้กับ Arduino uno AT328p
 
 พอร์ต UART(Serial RX3,TX3) ที่ 3 บนบอร์ด Arduino mega 2560 เชื่อมต่อ ขา RX,TX จากบอร์ด A9G module เพื่อส่งข้อมูลหากัน (https://docs.arduino.cc/resources/pinouts/A000067-full-pinout.pdf)(https://ai-thinker-open.github.io/GPRS_C_SDK_DOC/en/hardware/pudding-dev-board.html)
 
+เชื่อม GND ของ บอร์ด A9G module เข้ากับ บอร์ด Arduino mega 2560 ด้วย
+
 ส่วน พอร์ต UART(Serial RX2,TX2) ที่ 2 ล่าสุดไม่ใช้แล้วสามารถลบโค้ดได้
 
 โมดูลวัด SEN55-SDN-T ต่อเข้าขา SDA,SCL บนบอร์ด Arduino mega 2560 (https://docs.arduino.cc/resources/pinouts/A000067-full-pinout.pdf)
