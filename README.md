@@ -3,6 +3,7 @@
 มีอยู่สองไฟล์ที่ใช้คือ workon_mega2.ino และ workon_uno2.ino
 
 workon_mega2.ino ใช้กับ Arduino mega 2560
+
 workon_uno2.ino ใช้กับ Arduino uno AT328p
 
 พอร์ตการเชื่อมต่อได้คอมเม้นต์ไว้ใน Source code เรียบร้อยแล้ว(จึงขออธิบายเพิ่มเติมเพื่อความเข้าใจ)
@@ -13,9 +14,11 @@ workon_uno2.ino ใช้กับ Arduino uno AT328p
 โมดูลวัด VOC ขา data ต่อเข้าขา A2 บนบอร์ด Arduino mega 2560
 
 เชื่อมต่อขา 7 ของบอร์ด Arduino mega 2560 เข้ากับขา 7 ของบอร์ด Arduino uno AT328p เพื่อปรับลอจิกทางไฟฟ้า
+
 เชื่อมต่อ GND ของทั้ง 2 บอร์ดเข้าด้วยกันเพื่อปรับลอจิกทางไฟฟ้า
 
 ไฟแสดงสถานะที่ 1(led_status1) ต่อเข้ากับขา 2 บนบอร์ด Arduino mega 2560
+
 ไฟแสดงสถานะที่ 2(led_status2) ต่อเข้ากับขา 3 บนบอร์ด Arduino mega 2560
 
 พอร์ต UART(Serial RX1,TX1) ที่ 1 บนบอร์ด Arduino mega 2560 เชื่อมต่อ ขา RX,TX จากบอร์ด Arduino uno AT328p เพื่อส่งข้อมูลหากัน (https://docs.arduino.cc/resources/pinouts/A000067-full-pinout.pdf)
