@@ -59,6 +59,7 @@ workon_uno2.ino ใช้กับ Arduino uno AT328p
 
 ปล. ส่วนตัว N2O จะทยอยลง code กับ ข้อมูลให้ครับ
 
+ปล. การ debug มอนิเตอร์ผ่าน serial monitor ของ Arduino เดี๋ยวส่งให้ในไลน์ส่วนตัวครับ
 
  
 
